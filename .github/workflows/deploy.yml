@@ -2,12 +2,16 @@ name: Deploy to EC2
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
 
     steps:
       - name: Checkout Code
@@ -16,7 +20,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'  
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
 
       - name: Install dependencies
         run: |
@@ -27,9 +32,9 @@ jobs:
         with:
           host: 13.60.191.95
           username: root
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /var/www/test
             git pull origin main
             npm install  # Install any new dependencies
-            pm2 restart 0 || pm2 start app.js  
+            pm2 restart 0 || pm2 start app.js
