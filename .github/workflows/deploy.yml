@@ -38,6 +38,7 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm use 22
             cd /var/www/test
+            git pull origin main
             npm install
             pm2 describe app > /dev/null
             if [ $? -eq 0 ]; then
