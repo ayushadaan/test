@@ -36,11 +36,5 @@ jobs:
           script: |
             export PATH=/root/.nvm/versions/node/v22.14.0/bin/pm2:$PATH #'which pm2' command on terminal will give the right path
             cd /var/www/test
-            git fetch origin main
-            git reset --hard origin/main
-            source ~/.bashrc  # or . ~/.bashrc
-            which node || echo "Node not found"
-            which npm || echo "NPM not found"
-            which pm2 || echo "PM2 not found"
             npm install
-            pm2 restart app || pm2 start app.js 
+            pm2 restart app || pm2 start app.js
