@@ -34,7 +34,10 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            export PATH=/root/.nvm/versions/node/v22.14.0/bin/pm2:$PATH #'which pm2' command on terminal will give the right path
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # Load nvm
+            nvm use 22
             cd /var/www/test
             npm install
-            pm2 restart app || pm2 start app.js
+            pm2 restart app || pm2 start app.js --name app
+
