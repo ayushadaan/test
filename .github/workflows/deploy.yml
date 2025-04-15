@@ -13,12 +13,23 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'  
+
+      - name: Install dependencies
+        run: |
+          npm install
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: 13.60.191.95  
+          host: 13.60.191.95
           username: root
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
             cd /var/www/test
             git pull origin main
+            npm install  # Install any new dependencies
+            pm2 restart 0 || pm2 start app.js  
